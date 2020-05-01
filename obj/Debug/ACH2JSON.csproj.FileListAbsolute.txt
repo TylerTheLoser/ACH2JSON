@@ -1,0 +1,10 @@
+D:\VB Projects\ACH2JSON\ACH2JSON\ACH2JSON\bin\Debug\ACH2JSON.exe.config
+D:\VB Projects\ACH2JSON\ACH2JSON\ACH2JSON\bin\Debug\ACH2JSON.exe
+D:\VB Projects\ACH2JSON\ACH2JSON\ACH2JSON\bin\Debug\ACH2JSON.pdb
+D:\VB Projects\ACH2JSON\ACH2JSON\ACH2JSON\obj\Debug\ACH2JSON.csprojResolveAssemblyReference.cache
+D:\VB Projects\ACH2JSON\ACH2JSON\ACH2JSON\obj\Debug\ACH2JSON.mainWindow.resources
+D:\VB Projects\ACH2JSON\ACH2JSON\ACH2JSON\obj\Debug\ACH2JSON.Properties.Resources.resources
+D:\VB Projects\ACH2JSON\ACH2JSON\ACH2JSON\obj\Debug\ACH2JSON.csproj.GenerateResource.Cache
+D:\VB Projects\ACH2JSON\ACH2JSON\ACH2JSON\obj\Debug\ACH2JSON.csproj.CoreCompileInputs.cache
+D:\VB Projects\ACH2JSON\ACH2JSON\ACH2JSON\obj\Debug\ACH2JSON.exe
+D:\VB Projects\ACH2JSON\ACH2JSON\ACH2JSON\obj\Debug\ACH2JSON.pdb
