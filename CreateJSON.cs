@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
-//TODO:
-//add identifier to each payment found. right now it will detect as a "duplicate" in the JSON file, maybe add a trans number?
-//maybe add a counter to the main, pass that number along and assign it to the first record
-//JSONify it
+using System.Text;
+using Newtonsoft.Json;
+
 namespace ACH2JSON
 {
     class CreateJSON
@@ -139,21 +138,40 @@ namespace ACH2JSON
         {
             using (StreamWriter sw = File.AppendText(info))
             {
-                sw.WriteLine("\"" + "PPD_" + PaymentCount + "\"" + ":[");
-                sw.WriteLine(@"{");
-                sw.WriteLine(@"""RecordTypeCode"": " + "\"" + PPDRecordTypeCode + "\"" + ",");
-                sw.WriteLine(@"""TransactionCode"": " + "\"" + PPDTransactionCode + "\"" + ",");
-                sw.WriteLine(@"""ReceivingDFIIdentification"": " + "\"" + PPDReceivingDFIIdentification + "\"" + ",");
-                sw.WriteLine(@"""CheckDigit"": " + "\"" + PPDCheckDigit + "\"" + ",");
-                sw.WriteLine(@"""DFIAccountNumber"": " + "\"" + PPDDFIAccountNumber + "\"" + ",");
-                sw.WriteLine(@"""Amount"": " + "\"" + PPDAmount + "\"" + ",");
-                sw.WriteLine(@"""IndividualIdentificationNumber"": " + "\"" + PPDIndividualIdentificationNumber + "\"" + ",");
-                sw.WriteLine(@"""IndividualName"": " + "\"" + PPDIndividualName + "\"" + ",");
-                sw.WriteLine(@"""DiscretionaryData"": " + "\"" + PPDDiscretionaryData + "\"" + ",");
-                sw.WriteLine(@"""AddendaRecordIndicator"": " + "\"" + PPDAddendaRecordIndicator + "\"" + ",");
-                sw.WriteLine(@"""TraceNumber"": " + "\"" + PPDTraceNumber + "\"");
-                sw.WriteLine(@"}");
-                sw.WriteLine(@"],");
+                StringBuilder sb = new StringBuilder();
+                StringWriter ssw = new StringWriter(sb);
+                JsonWriter writer = new JsonTextWriter(sw);
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartObject();
+                writer.WritePropertyName("PPD_" + PaymentCount);
+                writer.WriteStartArray();
+                writer.WriteStartObject();
+                writer.WritePropertyName("RecordTypeCode");
+                writer.WriteValue(PPDRecordTypeCode);
+                writer.WritePropertyName("TransactionCode");
+                writer.WriteValue(PPDTransactionCode);
+                writer.WritePropertyName("ReceivingDFIIdentification");
+                writer.WriteValue(PPDReceivingDFIIdentification);
+                writer.WritePropertyName("CheckDigit");
+                writer.WriteValue(PPDCheckDigit);
+                writer.WritePropertyName("DFIAccountNumber");
+                writer.WriteValue(PPDDFIAccountNumber);
+                writer.WritePropertyName("Amount");
+                writer.WriteValue(PPDAmount);
+                writer.WritePropertyName("IndividualIdentificationNumber");
+                writer.WriteValue(PPDIndividualIdentificationNumber);
+                writer.WritePropertyName("IndividualName");
+                writer.WriteValue(PPDIndividualName);
+                writer.WritePropertyName("DiscretionaryData");
+                writer.WriteValue(PPDDiscretionaryData);
+                writer.WritePropertyName("AddendaRecordIndicator");
+                writer.WriteValue(PPDAddendaRecordIndicator);
+                writer.WritePropertyName("TraceNumber");
+                writer.WriteValue(PPDTraceNumber);
+                writer.WriteEndObject();
+                writer.WriteEndArray();
+                writer.WriteEndObject();
+                sw.WriteLine(sb.ToString());
                 sw.Close();
             }
         }
@@ -161,21 +179,40 @@ namespace ACH2JSON
         {
             using (StreamWriter sw = File.AppendText(info))
             {
-                sw.WriteLine(@"""CCD"":[");
-                sw.WriteLine(@"{");
-                sw.WriteLine(@"""RecordTypeCode"": " + "\"" + PPDRecordTypeCode + "\"" + ",");
-                sw.WriteLine(@"""TransactionCode"": " + "\"" + PPDTransactionCode + "\"" + ",");
-                sw.WriteLine(@"""ReceivingDFIIdentification"": " + "\"" + PPDReceivingDFIIdentification + "\"" + ",");
-                sw.WriteLine(@"""CheckDigit"": " + "\"" + PPDCheckDigit + "\"" + ",");
-                sw.WriteLine(@"""DFIAccountNumber"": " + "\"" + PPDDFIAccountNumber + "\"" + ",");
-                sw.WriteLine(@"""Amount"": " + "\"" + PPDAmount + "\"" + ",");
-                sw.WriteLine(@"""IdentificationNumber"": " + "\"" + PPDIndividualIdentificationNumber + "\"" + ",");
-                sw.WriteLine(@"""ReceivingCompanyName"": " + "\"" + PPDIndividualName + "\"" + ",");
-                sw.WriteLine(@"""DiscretionaryData"": " + "\"" + PPDDiscretionaryData + "\"" + ",");
-                sw.WriteLine(@"""AddendaRecordIndicator"": " + "\"" + PPDAddendaRecordIndicator + "\"" + ",");
-                sw.WriteLine(@"""TraceNumber"": " + "\"" + PPDTraceNumber + "\"");
-                sw.WriteLine(@"}");
-                sw.WriteLine(@"],");
+                StringBuilder sb = new StringBuilder();
+                StringWriter ssw = new StringWriter(sb);
+                JsonWriter writer = new JsonTextWriter(sw);
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartObject();
+                writer.WritePropertyName("CCD_" + PaymentCount);
+                writer.WriteStartArray();
+                writer.WriteStartObject();
+                writer.WritePropertyName("RecordTypeCode");
+                writer.WriteValue(PPDRecordTypeCode);
+                writer.WritePropertyName("TransactionCode");
+                writer.WriteValue(PPDTransactionCode);
+                writer.WritePropertyName("ReceivingDFIIdentification");
+                writer.WriteValue(PPDReceivingDFIIdentification);
+                writer.WritePropertyName("CheckDigit");
+                writer.WriteValue(PPDCheckDigit);
+                writer.WritePropertyName("DFIAccountNumber");
+                writer.WriteValue(PPDDFIAccountNumber);
+                writer.WritePropertyName("Amount");
+                writer.WriteValue(PPDAmount);
+                writer.WritePropertyName("IdentificationNumber");
+                writer.WriteValue(PPDIndividualIdentificationNumber);
+                writer.WritePropertyName("ReceivingCompanyName");
+                writer.WriteValue(PPDIndividualName);
+                writer.WritePropertyName("DiscretionaryData");
+                writer.WriteValue(PPDDiscretionaryData);
+                writer.WritePropertyName("AddendaRecordIndicator");
+                writer.WriteValue(PPDAddendaRecordIndicator);
+                writer.WritePropertyName("TraceNumber");
+                writer.WriteValue(PPDTraceNumber);
+                writer.WriteEndObject();
+                writer.WriteEndArray();
+                writer.WriteEndObject();
+                sw.WriteLine(sb.ToString());
                 sw.Close();
             }
         }
@@ -183,21 +220,40 @@ namespace ACH2JSON
         {
             using (StreamWriter sw = File.AppendText(info))
             {
-                sw.WriteLine(@"""TEL"":[");
-                sw.WriteLine(@"{");
-                sw.WriteLine(@"""RecordTypeCode"": " + "\"" + PPDRecordTypeCode + "\"" + ",");
-                sw.WriteLine(@"""TransactionCode"": " + "\"" + PPDTransactionCode + "\"" + ",");
-                sw.WriteLine(@"""ReceivingDFIIdentification"": " + "\"" + PPDReceivingDFIIdentification + "\"" + ",");
-                sw.WriteLine(@"""CheckDigit"": " + "\"" + PPDCheckDigit + "\"" + ",");
-                sw.WriteLine(@"""DFIAccountNumber"": " + "\"" + PPDDFIAccountNumber + "\"" + ",");
-                sw.WriteLine(@"""Amount"": " + "\"" + PPDAmount + "\"" + ",");
-                sw.WriteLine(@"""IndividualIdentificationNumber"": " + "\"" + PPDIndividualIdentificationNumber + "\"" + ",");
-                sw.WriteLine(@"""IndividualName"": " + "\"" + PPDIndividualName + "\"" + ",");
-                sw.WriteLine(@"""DiscretionaryData"": " + "\"" + PPDDiscretionaryData + "\"" + ",");
-                sw.WriteLine(@"""AddendaRecordIndicator"": " + "\"" + PPDAddendaRecordIndicator + "\"" + ",");
-                sw.WriteLine(@"""TraceNumber"": " + "\"" + PPDTraceNumber + "\"");
-                sw.WriteLine(@"}");
-                sw.WriteLine(@"],");
+                StringBuilder sb = new StringBuilder();
+                StringWriter ssw = new StringWriter(sb);
+                JsonWriter writer = new JsonTextWriter(sw);
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartObject();
+                writer.WritePropertyName("TEL_" + PaymentCount);
+                writer.WriteStartArray();
+                writer.WriteStartObject();
+                writer.WritePropertyName("RecordTypeCode");
+                writer.WriteValue(PPDRecordTypeCode);
+                writer.WritePropertyName("TransactionCode");
+                writer.WriteValue(PPDTransactionCode);
+                writer.WritePropertyName("ReceivingDFIIdentification");
+                writer.WriteValue(PPDReceivingDFIIdentification);
+                writer.WritePropertyName("CheckDigit");
+                writer.WriteValue(PPDCheckDigit);
+                writer.WritePropertyName("DFIAccountNumber");
+                writer.WriteValue(PPDDFIAccountNumber);
+                writer.WritePropertyName("Amount");
+                writer.WriteValue(PPDAmount);
+                writer.WritePropertyName("IndividualIdentificationNumber");
+                writer.WriteValue(PPDIndividualIdentificationNumber);
+                writer.WritePropertyName("IndividualName");
+                writer.WriteValue(PPDIndividualName);
+                writer.WritePropertyName("DiscretionaryData");
+                writer.WriteValue(PPDDiscretionaryData);
+                writer.WritePropertyName("AddendaRecordIndicator");
+                writer.WriteValue(PPDAddendaRecordIndicator);
+                writer.WritePropertyName("TraceNumber");
+                writer.WriteValue(PPDTraceNumber);
+                writer.WriteEndObject();
+                writer.WriteEndArray();
+                writer.WriteEndObject();
+                sw.WriteLine(sb.ToString());
                 sw.Close();
             }
         }
@@ -205,23 +261,44 @@ namespace ACH2JSON
         {
             using (StreamWriter sw = File.AppendText(info))
             {
-                sw.WriteLine(@"""CTX"":[");
-                sw.WriteLine(@"{");
-                sw.WriteLine(@"""RecordTypeCode"": " + "\"" + PPDRecordTypeCode + "\"" + ",");
-                sw.WriteLine(@"""TransactionCode"": " + "\"" + PPDTransactionCode + "\"" + ",");
-                sw.WriteLine(@"""ReceivingDFIIdentification"": " + "\"" + PPDReceivingDFIIdentification + "\"" + ",");
-                sw.WriteLine(@"""CheckDigit"": " + "\"" + PPDCheckDigit + "\"" + ",");
-                sw.WriteLine(@"""DFIAccountNumber"": " + "\"" + PPDDFIAccountNumber + "\"" + ",");
-                sw.WriteLine(@"""TotalAmount"": " + "\"" + PPDAmount + "\"" + ",");
-                sw.WriteLine(@"""IdentificationNumber"": " + "\"" + PPDIndividualIdentificationNumber + "\"" + ",");
-                sw.WriteLine(@"""NumberOfAddendaRecords"": " + "\"" + PPDIndividualName + "\"" + ",");
-                sw.WriteLine(@"""ReceivingCompanyName"": " + "\"" + PPDDiscretionaryData + "\"" + ",");
-                sw.WriteLine(@"""Reserved"": " + "\"" + PPDAddendaRecordIndicator + "\"" + ",");
-                sw.WriteLine(@"""DiscretionaryData"": " + "\"" + PPDTraceNumber + "\"" + ",");
-                sw.WriteLine(@"""AddendaRecordIndicator"": " + "\"" + CTXField12 + "\"" + ",");
-                sw.WriteLine(@"""TraceNumber"": " + "\"" + CTXField13 + "\"");
-                sw.WriteLine(@"}");
-                sw.WriteLine(@"],");
+                StringBuilder sb = new StringBuilder();
+                StringWriter ssw = new StringWriter(sb);
+                JsonWriter writer = new JsonTextWriter(sw);
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartObject();
+                writer.WritePropertyName("CTX_" + PaymentCount);
+                writer.WriteStartArray();
+                writer.WriteStartObject();
+                writer.WritePropertyName("RecordTypeCode");
+                writer.WriteValue(PPDRecordTypeCode);
+                writer.WritePropertyName("TransactionCode");
+                writer.WriteValue(PPDTransactionCode);
+                writer.WritePropertyName("ReceivingDFIIdentification");
+                writer.WriteValue(PPDReceivingDFIIdentification);
+                writer.WritePropertyName("CheckDigit");
+                writer.WriteValue(PPDCheckDigit);
+                writer.WritePropertyName("DFIAccountNumber");
+                writer.WriteValue(PPDDFIAccountNumber);
+                writer.WritePropertyName("TotalAmount");
+                writer.WriteValue(PPDAmount);
+                writer.WritePropertyName("IdentificationNumber");
+                writer.WriteValue(PPDIndividualIdentificationNumber);
+                writer.WritePropertyName("NumberOfAddendaRecords");
+                writer.WriteValue(PPDIndividualName);
+                writer.WritePropertyName("ReceivingCompanyName");
+                writer.WriteValue(PPDDiscretionaryData);
+                writer.WritePropertyName("Reserved");
+                writer.WriteValue(PPDAddendaRecordIndicator);
+                writer.WritePropertyName("DiscretionaryData");
+                writer.WriteValue(PPDTraceNumber);
+                writer.WritePropertyName("AddendaRecordIndicator");
+                writer.WriteValue(CTXField12);
+                writer.WritePropertyName("TraceNumber");
+                writer.WriteValue(CTXField13);
+                writer.WriteEndObject();
+                writer.WriteEndArray();
+                writer.WriteEndObject();
+                sw.WriteLine(sb.ToString());
                 sw.Close();
             }
         }
@@ -229,130 +306,235 @@ namespace ACH2JSON
         {
             using (StreamWriter sw = File.AppendText(info))
             {
-                sw.WriteLine(@"""WEB"":[");
-                sw.WriteLine(@"{");
-                sw.WriteLine(@"""RecordTypeCode"": " + "\"" + PPDRecordTypeCode + "\"" + ",");
-                sw.WriteLine(@"""TransactionCode"": " + "\"" + PPDTransactionCode + "\"" + ",");
-                sw.WriteLine(@"""ReceivingDFIIdentification"": " + "\"" + PPDReceivingDFIIdentification + "\"" + ",");
-                sw.WriteLine(@"""CheckDigit"": " + "\"" + PPDCheckDigit + "\"" + ",");
-                sw.WriteLine(@"""DFIAccountNumber"": " + "\"" + PPDDFIAccountNumber + "\"" + ",");
-                sw.WriteLine(@"""Amount"": " + "\"" + PPDAmount + "\"" + ",");
-                sw.WriteLine(@"""IndividualIdentificationNumber"": " + "\"" + PPDIndividualIdentificationNumber + "\"" + ",");
-                sw.WriteLine(@"""IndividualName"": " + "\"" + PPDIndividualName + "\"" + ",");
-                sw.WriteLine(@"""PaymentTypeCode"": " + "\"" + PPDDiscretionaryData + "\"" + ",");
-                sw.WriteLine(@"""AddendaRecordIndicator"": " + "\"" + PPDAddendaRecordIndicator + "\"" + ",");
-                sw.WriteLine(@"""TraceNumber"": " + "\"" + PPDTraceNumber + "\"");
-                sw.WriteLine(@"}");
-                sw.WriteLine(@"],");
+                StringBuilder sb = new StringBuilder();
+                StringWriter ssw = new StringWriter(sb);
+                JsonWriter writer = new JsonTextWriter(sw);
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartObject();
+                writer.WritePropertyName("WEB_" + PaymentCount);
+                writer.WriteStartArray();
+                writer.WriteStartObject();
+                writer.WritePropertyName("RecordTypeCode");
+                writer.WriteValue(PPDRecordTypeCode);
+                writer.WritePropertyName("TransactionCode");
+                writer.WriteValue(PPDTransactionCode);
+                writer.WritePropertyName("ReceivingDFIIdentification");
+                writer.WriteValue(PPDReceivingDFIIdentification);
+                writer.WritePropertyName("CheckDigit");
+                writer.WriteValue(PPDCheckDigit);
+                writer.WritePropertyName("DFIAccountNumber");
+                writer.WriteValue(PPDDFIAccountNumber);
+                writer.WritePropertyName("Amount");
+                writer.WriteValue(PPDAmount);
+                writer.WritePropertyName("IndividualIdentificationNumber");
+                writer.WriteValue(PPDIndividualIdentificationNumber);
+                writer.WritePropertyName("IndividualName");
+                writer.WriteValue(PPDIndividualName);
+                writer.WritePropertyName("PaymentTypeCode");
+                writer.WriteValue(PPDDiscretionaryData);
+                writer.WritePropertyName("AddendaRecordIndicator");
+                writer.WriteValue(PPDAddendaRecordIndicator);
+                writer.WritePropertyName("TraceNumber");
+                writer.WriteValue(PPDTraceNumber);
+                writer.WriteEndObject();
+                writer.WriteEndArray();
+                writer.WriteEndObject();
+                sw.WriteLine(sb.ToString());
                 sw.Close();
             }
         }
         public void AppendFHR(string info)
         {
-            using (StreamWriter writer = new StreamWriter(info))
+            using (StreamWriter sw = new StreamWriter(info))
             {
-                writer.WriteLine(@"{"); //start
-                //********** FILE HEADER RECORD WRITE START **********//
-                writer.WriteLine(@"""FileHeaderRecord"":[");
-                writer.WriteLine(@"{");
-                writer.WriteLine(@"""RecordTypeCode"": " + "\"" + FHRRecordTypeCode + "\"" + ",");
-                writer.WriteLine(@"""ImmediateDestination"": " + "\"" + FHRImmediateDestination + "\"" + ",");
-                writer.WriteLine(@"""ImmediateOrigin"": " + "\"" + FHRImmediateOrigin + "\"" + ",");
-                writer.WriteLine(@"""FileCreationDate"": " + "\"" + FHRFileCreationDate + "\"" + ",");
-                writer.WriteLine(@"""FileCreationTime"": " + "\"" + FHRFileCreationTime + "\"" + ",");
-                writer.WriteLine(@"""FileIDModifier"": " + "\"" + FHRFileIDModifier + "\"" + ",");
-                writer.WriteLine(@"""RecordSize"": " + "\"" + FHRRecordSize + "\"" + ",");
-                writer.WriteLine(@"""BlockingFactor"": " + "\"" + FHRBlockingFactor + "\"" + ",");
-                writer.WriteLine(@"""FormatCode"": " + "\"" + FHRFormatCode + "\"" + ",");
-                writer.WriteLine(@"""ImmediateDestinationName"": " + "\"" + FHRImmediateDestinationName + "\"" + ",");
-                writer.WriteLine(@"""ImmediateOriginName"": " + "\"" + FHRImmediateOriginName + "\"" + ",");
-                writer.WriteLine(@"""ReferenceCode"": " + "\"" + FHRReferenceCode + "\"");
-                writer.WriteLine(@"}");
-                writer.WriteLine(@"],");
-                //********** FILE HEADER RECORD WRITE END **********//
-                writer.Close();
+                StringBuilder sb = new StringBuilder();
+                StringWriter ssw = new StringWriter(sb);
+                JsonWriter writer = new JsonTextWriter(sw);
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartObject();
+                writer.WritePropertyName("FileHeaderRecord");
+                writer.WriteStartArray();
+                writer.WriteStartObject();
+                writer.WritePropertyName("RecordTypeCode");
+                writer.WriteValue(FHRRecordTypeCode);
+                writer.WritePropertyName("ImmediateDestination");
+                writer.WriteValue(FHRImmediateDestination);
+                writer.WritePropertyName("ImmediateOrigin");
+                writer.WriteValue(FHRImmediateOrigin);
+                writer.WritePropertyName("FileCreationDate");
+                writer.WriteValue(FHRFileCreationDate);
+                writer.WritePropertyName("FileCreationTime");
+                writer.WriteValue(FHRFileCreationTime);
+                writer.WritePropertyName("FileIDModifier");
+                writer.WriteValue(FHRFileIDModifier);
+                writer.WritePropertyName("RecordSize");
+                writer.WriteValue(FHRRecordSize);
+                writer.WritePropertyName("BlockingFactor");
+                writer.WriteValue(FHRBlockingFactor);
+                writer.WritePropertyName("FormatCode");
+                writer.WriteValue(FHRFormatCode);
+                writer.WritePropertyName("ImmediateDestinationName");
+                writer.WriteValue(FHRImmediateDestinationName);
+                writer.WritePropertyName("ImmediateOriginName");
+                writer.WriteValue(FHRImmediateOriginName);
+                writer.WritePropertyName("ReferenceCode");
+                writer.WriteValue(FHRReferenceCode);
+                writer.WriteEndObject();
+                writer.WriteEndArray();
+                writer.WriteEndObject(); 
+                sw.WriteLine(sb.ToString());
+                sw.Close();
             }
         }
         public void AppendBHR(string info)
         {
-            using (StreamWriter writer = File.AppendText(info))
+            using (StreamWriter sw = File.AppendText(info))
             {
-                writer.WriteLine(@"""BatchHeaderRecord"":[");
-                writer.WriteLine(@"{");
-                writer.WriteLine(@"""RecordTypeCode"": " + "\"" + BHRRecordTypeCode + "\"" + ",");
-                writer.WriteLine(@"""ServiceClassCode"": " + "\"" + BHRServiceClassCode + "\"" + ",");
-                writer.WriteLine(@"""CompanyName"": " + "\"" + BHRCompanyName + "\"" + ",");
-                writer.WriteLine(@"""CompanyDiscretionaryData"": " + "\"" + BHRCompanyDiscretionaryData + "\"" + ",");
-                writer.WriteLine(@"""CompanyIdentification"": " + "\"" + BHRCompanyIdentification + "\"" + ",");
-                writer.WriteLine(@"""StandardEntryClassCode"": " + "\"" + BHRStandardEntryClassCode + "\"" + ",");
-                writer.WriteLine(@"""CompanyEntryDescription"": " + "\"" + BHRCompanyEntryDescription + "\"" + ",");
-                writer.WriteLine(@"""CompanyDescriptiveDate"": " + "\"" + BHRCompanyDescriptiveDate + "\"" + ",");
-                writer.WriteLine(@"""EffectiveEntryDate"": " + "\"" + BHREffectiveEntryDate + "\"" + ",");
-                writer.WriteLine(@"""SettlementDate"": " + "\"" + BHRSettlementDate + "\"" + ",");
-                writer.WriteLine(@"""OriginatorStatusCode"": " + "\"" + BHROriginatorStatusCode + "\"" + ",");
-                writer.WriteLine(@"""OriginatingDFIIdentification"": " + "\"" + BHROriginatingDFIIdentification + "\"" + ",");
-                writer.WriteLine(@"""BatchNumber"": " + "\"" + BHRBatchNumber + "\"");
-                writer.WriteLine(@"}");
-                writer.WriteLine(@"],");
-                writer.Close();
+                StringBuilder sb = new StringBuilder();
+                StringWriter ssw = new StringWriter(sb);
+                JsonWriter writer = new JsonTextWriter(sw);
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartObject();
+                writer.WritePropertyName("BatchHeaderRecord");
+                writer.WriteStartArray();
+                writer.WriteStartObject();
+                writer.WritePropertyName("RecordTypeCode");
+                writer.WriteValue(BHRRecordTypeCode);
+                writer.WritePropertyName("ServiceClassCode");
+                writer.WriteValue(BHRServiceClassCode);
+                writer.WritePropertyName("CompanyName");
+                writer.WriteValue(BHRCompanyName);
+                writer.WritePropertyName("CompanyDiscretionaryData");
+                writer.WriteValue(BHRCompanyDiscretionaryData);
+                writer.WritePropertyName("CompanyIdentification");
+                writer.WriteValue(BHRCompanyIdentification);
+                writer.WritePropertyName("StandardEntryClassCode");
+                writer.WriteValue(BHRStandardEntryClassCode);
+                writer.WritePropertyName("CompanyEntryDescription");
+                writer.WriteValue(BHRCompanyEntryDescription);
+                writer.WritePropertyName("CompanyDescriptiveDate");
+                writer.WriteValue(BHRCompanyDescriptiveDate);
+                writer.WritePropertyName("EffectiveEntryDate");
+                writer.WriteValue(BHREffectiveEntryDate);
+                writer.WritePropertyName("SettlementDate");
+                writer.WriteValue(BHRSettlementDate);
+                writer.WritePropertyName("OriginatorStatusCode");
+                writer.WriteValue(BHROriginatorStatusCode);
+                writer.WritePropertyName("OriginatingDFIIdentification");
+                writer.WriteValue(BHROriginatingDFIIdentification);
+                writer.WritePropertyName("BatchNumber");
+                writer.WriteValue(BHRBatchNumber);
+                writer.WriteEndObject();
+                writer.WriteEndArray();
+                writer.WriteEndObject();
+                sw.WriteLine(sb.ToString());
+                sw.Close();
             }
         }
         public void AppendBCR(string info)
         {
-            using (StreamWriter writer = File.AppendText(info))
+            using (StreamWriter sw = File.AppendText(info))
             {
-                writer.WriteLine(@"""BatchControlRecord"":[");
-                writer.WriteLine(@"{");
-                writer.WriteLine(@"""RecordTypeCode"": " + "\"" + BCRRecordTypeCode + "\"" + ",");
-                writer.WriteLine(@"""ServiceClassCode"": " + "\"" + BCRServiceClassCode + "\"" + ",");
-                writer.WriteLine(@"""EntryAddendaCount"": " + "\"" + BCREntryAddendaCount + "\"" + ",");
-                writer.WriteLine(@"""EntryHash"": " + "\"" + BCREntryHash + "\"" + ",");
-                writer.WriteLine(@"""TotalDebitEntryAmount"": " + "\"" + BCRTotalDebitEntryAmt + "\"" + ",");
-                writer.WriteLine(@"""TotalCreditEntryAmount"": " + "\"" + BCRTotalCreditEntryAmt + "\"" + ",");
-                writer.WriteLine(@"""CompanyIdentification"": " + "\"" + BCRCompanyIdentification + "\"" + ",");
-                writer.WriteLine(@"""MessageAuthentificationCode"": " + "\"" + BCRMessageAuthCode + "\"" + ",");
-                writer.WriteLine(@"""Reserved"": " + "\"" + BCRReserved + "\"" + ",");
-                writer.WriteLine(@"""OriginatingDFIIdentification"": " + "\"" + BCROriginatingDFIIdentification + "\"" + ",");
-                writer.WriteLine(@"""BatchNumber"": " + "\"" + BCRBatchNumber + "\"");
-                writer.WriteLine(@"}");
-                writer.WriteLine(@"],");
-                writer.Close();
+                StringBuilder sb = new StringBuilder();
+                StringWriter ssw = new StringWriter(sb);
+                JsonWriter writer = new JsonTextWriter(sw);
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartObject();
+                writer.WritePropertyName("BatchControlRecord");
+                writer.WriteStartArray();
+                writer.WriteStartObject();
+                writer.WritePropertyName("RecordTypeCode");
+                writer.WriteValue(BCRRecordTypeCode);
+                writer.WritePropertyName("ServiceClassCode");
+                writer.WriteValue(BCRServiceClassCode);
+                writer.WritePropertyName("EntryAddendaCount");
+                writer.WriteValue(BCREntryAddendaCount);
+                writer.WritePropertyName("EntryHash");
+                writer.WriteValue(BCREntryHash);
+                writer.WritePropertyName("TotalDebitEntryAmount");
+                writer.WriteValue(BCRTotalDebitEntryAmt);
+                writer.WritePropertyName("TotalCreditEntryAmount");
+                writer.WriteValue(BCRTotalCreditEntryAmt);
+                writer.WritePropertyName("CompanyIdentification");
+                writer.WriteValue(BCRCompanyIdentification);
+                writer.WritePropertyName("MessageAuthenticationCode");
+                writer.WriteValue(BCRMessageAuthCode);
+                writer.WritePropertyName("Reserved");
+                writer.WriteValue(BCRReserved);
+                writer.WritePropertyName("OriginatingDFIIdentification");
+                writer.WriteValue(BCROriginatingDFIIdentification);
+                writer.WritePropertyName("BatchNumber");
+                writer.WriteValue(BCRBatchNumber);
+                writer.WriteEndObject();
+                writer.WriteEndArray();
+                writer.WriteEndObject();
+                sw.WriteLine(sb.ToString());
+                sw.Close();
             }
         }
         public void AppendAddenda(string info)
         {
             using (StreamWriter sw = File.AppendText(info))
             {
-                sw.WriteLine("\"" + BHRStandardEntryClassCode + "_Addenda_" + AddendaCount + "\"" + ":[");
-                sw.WriteLine(@"{");
-                sw.WriteLine(@"""RecordTypeCode"": " + "\"" + AddendaRecordTypeCode + "\"" + ",");
-                sw.WriteLine(@"""AddendaTypeCode"": " + "\"" + AddendaAddendaTypeCode + "\"" + ",");
-                sw.WriteLine(@"""PaymentRelatedInformation"": " + "\"" + AddendaPaymentRelatedInformation + "\"" + ",");
-                sw.WriteLine(@"""AddendaSequenceNumber"": " + "\"" + AddendaAddendaSequenceNumber + "\"" + ",");
-                sw.WriteLine(@"""EntryDetailSequenceNumber"": " + "\"" + AddendaEntrySequenceNumber + "\"");
-                sw.WriteLine(@"}");
-                sw.WriteLine(@"],");
+                StringBuilder sb = new StringBuilder();
+                StringWriter ssw = new StringWriter(sb);
+                JsonWriter writer = new JsonTextWriter(sw);
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartObject();
+                writer.WritePropertyName("Addenda_" + AddendaCount);
+                writer.WriteStartArray();
+                writer.WriteStartObject();
+                writer.WritePropertyName("RecordTypeCode");
+                writer.WriteValue(AddendaRecordTypeCode);
+                writer.WritePropertyName("AddendaTypeCode");
+                writer.WriteValue(AddendaAddendaTypeCode);
+                writer.WritePropertyName("PaymentRelatedInformation");
+                writer.WriteValue(AddendaPaymentRelatedInformation);
+                writer.WritePropertyName("AddendaSequenceNumber");
+                writer.WriteValue(AddendaAddendaSequenceNumber);
+                writer.WritePropertyName("EntryDetailSequenceNumber");
+                writer.WriteValue(AddendaEntrySequenceNumber);
+                writer.WriteEndObject();
+                writer.WriteEndArray();
+                writer.WriteEndObject();
+                sw.WriteLine(sb.ToString());
                 sw.Close();
             }
         }
         public void AppendFCR(string info)
         {
-            using (StreamWriter writer = File.AppendText(info))
+            using (StreamWriter sw = File.AppendText(info))
             {
-                writer.WriteLine(@"""FileControlRecord"":[");
-                writer.WriteLine(@"{");
-                writer.WriteLine(@"""RecordTypeCode"": " + "\"" + FCRRecordTypeCode + "\"" + ",");
-                writer.WriteLine(@"""BatchCount"": " + "\"" + FCRBatchCount + "\"" + ",");
-                writer.WriteLine(@"""BlockCount"": " + "\"" + FCRBlockCount + "\"" + ",");
-                writer.WriteLine(@"""EntryAddendaCount"": " + "\"" + FCREntryAddendaCount + "\"" + ",");
-                writer.WriteLine(@"""EntryHash"": " + "\"" + FCREntryHash + "\"" + ",");
-                writer.WriteLine(@"""TotalDebitEntryAmount"": " + "\"" + FCRTotalDebitEntryAmt + "\"" + ",");
-                writer.WriteLine(@"""TotalCreditEntryAmount"": " + "\"" + FCRTotalCreditEntryAmt + "\"" + ",");
-                writer.WriteLine(@"""Reserved"": " + "\"" + FCRReserved + "\"");
-                writer.WriteLine(@"}");
-                writer.WriteLine(@"]");
-                writer.WriteLine(@"}"); //end
-                writer.Close();
+                StringBuilder sb = new StringBuilder();
+                StringWriter ssw = new StringWriter(sb);
+                JsonWriter writer = new JsonTextWriter(sw);
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartObject();
+                writer.WritePropertyName("FileControlRecord");
+                writer.WriteStartArray();
+                writer.WriteStartObject();
+                writer.WritePropertyName("RecordTypeCode");
+                writer.WriteValue(FCRRecordTypeCode);
+                writer.WritePropertyName("BatchCount");
+                writer.WriteValue(FCRBatchCount);
+                writer.WritePropertyName("BlockCount");
+                writer.WriteValue(FCRBlockCount);
+                writer.WritePropertyName("EntryAddendaCount");
+                writer.WriteValue(FCREntryAddendaCount);
+                writer.WritePropertyName("EntryHash");
+                writer.WriteValue(FCREntryHash);
+                writer.WritePropertyName("TotalDebitEntryAmount");
+                writer.WriteValue(FCRTotalDebitEntryAmt);
+                writer.WritePropertyName("TotalCreditEntryAmount");
+                writer.WriteValue(FCRTotalCreditEntryAmt);
+                writer.WritePropertyName("Reserved");
+                writer.WriteValue(FCRReserved);
+                writer.WriteEndObject();
+                writer.WriteEndArray();
+                //writer.WriteEndObject();
+                writer.WriteEnd();
+                sw.WriteLine(sb.ToString());
+                sw.Close();
             }
         }
     }

@@ -129,7 +129,9 @@ namespace ACH2JSON
                                 counter++;
                             }
                         }
+                        MessageBox.Show("Conversion Complete.");
                         reader.Close();
+                        
                         Console.WriteLine("There were {0} lines.", counter);
                     }
                 }
