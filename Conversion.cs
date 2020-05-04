@@ -1,14 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ACH2JSON
 {
-    class Conversion
+    class Conversion : mainWindow
     {
         CreateJSON cjn = new CreateJSON();
+        public int PaymentCount { get; set; }
+        public int AddendaCount { get; set; }
+        public void getFilePath(string o)
+        {
+            cjn.damnFilePath = o;
+            //Console.WriteLine("your file path is: " + o);
+        }
         public string SECResult { get; set; }
         public void FHRConv(string p)
         {
@@ -41,26 +44,7 @@ namespace ACH2JSON
             cjn.FHRImmediateOriginName = FHRION;
             string FHRRC = p.Substring(86, 8);
             cjn.FHRReferenceCode = FHRRC;
-            /* DEBUG */
-            Console.WriteLine("FILE HEADER RECORD PARSE START");
-            Console.WriteLine("RecordTypeCode: " + FHRRTC);
-            Console.WriteLine("PriorityCode: " + FHRPC);
-            Console.WriteLine("ImmediateDesintation: " + FHRID);
-            Console.WriteLine("ImmediateOrigin: " + FHRIO);
-            Console.WriteLine("FileCreationDate: " + FHRFCD);
-            Console.WriteLine("FileCreationTime: " + FHRFCT);
-            Console.WriteLine("FileIDModifier: " + FHRFIM);
-            Console.WriteLine("RecordSize: " + FHRRS);
-            Console.WriteLine("BlockingFactor: " + FHRBF);
-            Console.WriteLine("FormatCode: " + FHRFC);
-            Console.WriteLine("ImmediateDestinationName: " + FHRIDN);
-            Console.WriteLine("ImmediateOriginName: " + FHRION);
-            Console.WriteLine("ReferenceCode: " + FHRRC);
-            Console.WriteLine("FILE HEADER RECORD PARSE END");
-            /* DEBUG */
-
-            //cjn.CreateThatFile();
-            //Console.WriteLine(FHRLine);
+            cjn.CreateThatFile(1);
         }
         public int BHRConv(string q)
         {
@@ -80,7 +64,7 @@ namespace ACH2JSON
             cjn.BHROriginatorStatusCode = q.Substring(78, 1);
             cjn.BHROriginatingDFIIdentification = q.Substring(79, 8);
             cjn.BHRBatchNumber = q.Substring(87, 7);
-            //cjn.CreateThatFile();
+            cjn.CreateThatFile(2);
             //here's the determination of further conversion...
             if (SEC == "CTX")
             {
@@ -117,12 +101,12 @@ namespace ACH2JSON
                 return 9;
             }
         }
-        public void PEConv(string r) //support multiple payments
+        public void PEConv(string r)
         {
             if (SECResult == "PPD")
             {
                 Console.WriteLine("PPD Conversion Started...");
-                //TODO PARSE PPD
+                cjn.PaymentCount = PaymentCount;
                 cjn.PPDRecordTypeCode = r.Substring(0, 1);
                 cjn.PPDTransactionCode = r.Substring(1, 2);
                 cjn.PPDReceivingDFIIdentification = r.Substring(3, 8);
@@ -134,23 +118,70 @@ namespace ACH2JSON
                 cjn.PPDDiscretionaryData = r.Substring(76, 2);
                 cjn.PPDAddendaRecordIndicator = r.Substring(78, 1);
                 cjn.PPDTraceNumber = r.Substring(79, 15);
-                //cjn.CreateThatFile();
+                cjn.CreateThatFile(3);
+
             } else if(SECResult == "CTX")
             {
                 Console.WriteLine("CTX Conversion Started...");
-                //TODO PARSE CTX
+                cjn.PPDRecordTypeCode = r.Substring(0, 1); //RecordTypeCode
+                cjn.PPDTransactionCode = r.Substring(1, 2); //Transaction Code
+                cjn.PPDReceivingDFIIdentification = r.Substring(3, 8); //ReceivingDFIIdentification
+                cjn.PPDCheckDigit = r.Substring(11, 1); //CheckDigit
+                cjn.PPDDFIAccountNumber = r.Substring(12, 17); //DFIAccountNumber
+                cjn.PPDAmount = r.Substring(29, 10); //TotalAmount
+                cjn.PPDIndividualIdentificationNumber = r.Substring(39, 15); //IdentificationNumber
+                cjn.PPDIndividualName = r.Substring(54, 4); //NumberOfAddendaRecords
+                cjn.PPDDiscretionaryData = r.Substring(58, 16); //ReceivingCompanyName
+                cjn.PPDAddendaRecordIndicator = r.Substring(74, 2); //Reserved
+                cjn.PPDTraceNumber = r.Substring(76, 2); //DiscretionaryData
+                cjn.CTXField12 = r.Substring(78, 1); //AddendaRecordIndicator
+                cjn.CTXField13 = r.Substring(79, 15); //TraceNumber
+                cjn.CreateThatFile(4);
             } else if(SECResult == "CCD")
             {
                 Console.WriteLine("CCD Conversion Started...");
-                //TODO PARSE CCD
+                cjn.PPDRecordTypeCode = r.Substring(0, 1); //RecordTypeCode
+                cjn.PPDTransactionCode = r.Substring(1, 2); //Transaction Code
+                cjn.PPDReceivingDFIIdentification = r.Substring(3, 8); //ReceivingDFIIdentification
+                cjn.PPDCheckDigit = r.Substring(11, 1); //CheckDigit
+                cjn.PPDDFIAccountNumber = r.Substring(12, 17); //DFIAccountNumber
+                cjn.PPDAmount = r.Substring(29, 10); //Amount
+                cjn.PPDIndividualIdentificationNumber = r.Substring(39, 15); //IdentificationNumber
+                cjn.PPDIndividualName = r.Substring(54, 22); //ReceivingCompanyName
+                cjn.PPDDiscretionaryData = r.Substring(76, 2); //DiscretionaryData
+                cjn.PPDAddendaRecordIndicator = r.Substring(78, 1); //AddendaRecordIndicator
+                cjn.PPDTraceNumber = r.Substring(79, 15); //TraceNumber
+                cjn.CreateThatFile(5);
             } else if(SECResult == "TEL")
             {
                 Console.WriteLine("TEL conversion started...");
-                //TODO PARSE TEL
+                cjn.PPDRecordTypeCode = r.Substring(0, 1); //RecordTypeCode
+                cjn.PPDTransactionCode = r.Substring(1, 2); //Transaction Code
+                cjn.PPDReceivingDFIIdentification = r.Substring(3, 8); //ReceivingDFIIdentification
+                cjn.PPDCheckDigit = r.Substring(11, 1); //CheckDigit
+                cjn.PPDDFIAccountNumber = r.Substring(12, 17); //DFIAccountNumber
+                cjn.PPDAmount = r.Substring(29, 10); //Amount
+                cjn.PPDIndividualIdentificationNumber = r.Substring(39, 15); //IndividualIdentificationNumber
+                cjn.PPDIndividualName = r.Substring(54, 22); //IndividualName
+                cjn.PPDDiscretionaryData = r.Substring(76, 2); //DiscretionaryData
+                cjn.PPDAddendaRecordIndicator = r.Substring(78, 1); //AddendaRecordIndicator
+                cjn.PPDTraceNumber = r.Substring(79, 15); //TraceNumber
+                cjn.CreateThatFile(6);
             } else if(SECResult == "WEB")
             {
                 Console.WriteLine("WEB conversion started...");
-                //TODO PARSE WEB
+                cjn.PPDRecordTypeCode = r.Substring(0, 1); //RecordTypeCode
+                cjn.PPDTransactionCode = r.Substring(1, 2); //Transaction Code
+                cjn.PPDReceivingDFIIdentification = r.Substring(3, 8); //ReceivingDFIIdentification
+                cjn.PPDCheckDigit = r.Substring(11, 1); //CheckDigit
+                cjn.PPDDFIAccountNumber = r.Substring(12, 17); //DFIAccountNumber
+                cjn.PPDAmount = r.Substring(29, 10); //Amount
+                cjn.PPDIndividualIdentificationNumber = r.Substring(39, 15); //IdentificationNumber
+                cjn.PPDIndividualName = r.Substring(54, 22); //ReceivingCompanyName
+                cjn.PPDDiscretionaryData = r.Substring(76, 2); //PaymentTypeCode
+                cjn.PPDAddendaRecordIndicator = r.Substring(78, 1); //AddendaRecordIndicator
+                cjn.PPDTraceNumber = r.Substring(79, 15); //TraceNumber
+                cjn.CreateThatFile(7);
             } else
             {
                 Console.WriteLine("FORMAT NOT DEFINED");
@@ -159,7 +190,14 @@ namespace ACH2JSON
         }
         public void ARConv(string s) //TODO - parse addenda records
         {
-            string ARLine = s;
+            Console.WriteLine("Addenda Conversion Started...");
+            cjn.AddendaCount = AddendaCount;
+            cjn.AddendaRecordTypeCode = s.Substring(0, 1);
+            cjn.AddendaAddendaTypeCode = s.Substring(1, 2);
+            cjn.AddendaPaymentRelatedInformation = s.Substring(3, 80);
+            cjn.AddendaAddendaSequenceNumber = s.Substring(83, 4);
+            cjn.AddendaEntrySequenceNumber = s.Substring(87, 7);
+            cjn.CreateThatFile(10);
         }
         public void BCRConv(string t)
         {
@@ -175,7 +213,7 @@ namespace ACH2JSON
             cjn.BCRReserved = t.Substring(73, 6);
             cjn.BCROriginatingDFIIdentification = t.Substring(79, 8);
             cjn.BCRBatchNumber = t.Substring(87, 7);
-            //cjn.CreateThatFile();
+            cjn.CreateThatFile(8);
         }
         public void FCRConv(string u)
         {
@@ -188,7 +226,7 @@ namespace ACH2JSON
             cjn.FCRTotalDebitEntryAmt = u.Substring(31, 12);
             cjn.FCRTotalCreditEntryAmt = u.Substring(43, 12);
             cjn.FCRReserved = u.Substring(55, 39);
-            cjn.CreateThatFile();
+            cjn.CreateThatFile(9);
         }
     }
 }

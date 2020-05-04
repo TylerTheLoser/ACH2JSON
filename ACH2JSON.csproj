@@ -48,7 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Conversion.cs" />
+    <Compile Include="Conversion.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="CreateJSON.cs" />
     <Compile Include="main.cs">
       <SubType>Form</SubType>

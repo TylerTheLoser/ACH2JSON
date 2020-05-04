@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
@@ -16,6 +9,26 @@ namespace ACH2JSON
         public mainWindow()
         {
             InitializeComponent();
+        }
+
+        public string thatpath { get; set; }
+        public void SaveFile()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "JSON Files | *.json";
+            sfd.DefaultExt = "json";
+            string sfdname = sfd.FileName;
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                Path.GetFileName(sfd.FileName);
+                thatpath = Path.GetFullPath(sfd.FileName);
+                //Console.WriteLine("from main: " + thatpath);
+            }
+            else
+            {
+                Console.WriteLine("bad path");
+            }
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -33,13 +46,17 @@ namespace ACH2JSON
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     filePath = ofd.FileName;
+                    SaveFile();
                     var fileStream = ofd.OpenFile();
                     using (StreamReader reader = new StreamReader(fileStream))
                     {
                         Conversion conv = new Conversion();
-                        //read each line in a loop and write them to an array or string (whatever works) to be parsed?
+                        //Console.WriteLine("from file save " + thatpath);
+                        conv.getFilePath(thatpath);
                         string line;
                         int counter = 0;
+                        int PECount = 0;
+                        int ADCount = 0;
                         while((line = reader.ReadLine()) != null)
                         {
                             if(line.Substring(0, 1).Contains("1"))
@@ -76,14 +93,21 @@ namespace ACH2JSON
                                 counter++;
                             } else if(line.Substring(0, 1).Contains("6"))
                             {
+                                //what i believe should happen is a new PE construct should be initialized each time
+                                //PEConstruct pec = new PEConstruct(line);
                                 conv.PEConv(line);
                                 Console.WriteLine("Payment Entry");
                                 //Console.WriteLine(line); //debug
+                                PECount++;
+                                conv.PaymentCount = PECount;
                                 counter++;
                             } else if (line.Substring(0, 1).Contains("7"))
                             {
                                 Console.WriteLine("Addenda Record");
                                 //Console.WriteLine(line); //debug
+                                conv.ARConv(line);
+                                ADCount++;
+                                conv.AddendaCount = ADCount;
                                 counter++;
                             } else if (line.Substring(0, 1).Contains("8"))
                             {
